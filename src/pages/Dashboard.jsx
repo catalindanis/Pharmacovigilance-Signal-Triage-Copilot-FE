@@ -8,7 +8,7 @@ import { useSignals } from '../hooks/useSignals'
 import './Dashboard.css'
 
 export default function Dashboard() {
-  const [params, setParams] = useState({ drug: 'ibuprofen', start_date: '2024-01-01', end_date: '2024-03-31' })
+  const [params, setParams] = useState({ drug: 'ibuprofen', start_date: '2024-01-01', end_date: '2024-01-01' })
   const { data, explainData, explainLoading, explainError, loading, error, selectSignal, selected } = useSignals(params)
 
   return (

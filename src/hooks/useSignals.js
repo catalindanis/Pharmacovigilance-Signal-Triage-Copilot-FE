@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { explainSignals, searchSignals } from '../services/api'
+import { explainSignals } from '../services/api'
 
 export function useSignals(params) {
   const paramsKey = JSON.stringify(params)
@@ -14,49 +14,40 @@ export function useSignals(params) {
   useEffect(() => {
     let mounted = true
     const requestParams = JSON.parse(paramsKey)
+
+    function handleResult(res) {
+      if (!mounted) return
+
+      const signals = res.packets || []
+      const transformedData = {
+        ...res,
+        signals,
+      }
+
+      setData(transformedData)
+      setExplainData(res)
+      setSelected(signals[0] || null)
+    }
+
     Promise.resolve().then(() => {
       if (!mounted) return
       setLoading(true)
       setError(null)
-
-      searchSignals(requestParams)
-        .then(res => {
-          if (!mounted) return
-          setData(res)
-          setSelected(res?.signals?.[0] || null)
-        })
-        .catch(err => {
-          if (!mounted) return
-          setError(err)
-        })
-        .finally(() => mounted && setLoading(false))
-    })
-
-    return () => {
-      mounted = false
-    }
-  }, [paramsKey])
-
-  useEffect(() => {
-    let mounted = true
-    const requestParams = JSON.parse(paramsKey)
-    Promise.resolve().then(() => {
-      if (!mounted) return
       setExplainLoading(true)
       setExplainError(null)
 
       explainSignals(requestParams)
-        .then(res => {
-          if (!mounted) return
-          setExplainData(res)
-          setSelected(res?.signals?.[0] || null)
-        })
+        .then(handleResult)
         .catch(err => {
           if (!mounted) return
           setExplainError(err)
+          setError(err)
         })
         .finally(() => {
-          if (mounted) setExplainLoading(false)
+          if (mounted) {
+            setLoading(false)
+            setExplainLoading(false)
+          }
         })
     })
 
