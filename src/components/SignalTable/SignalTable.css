@@ -1,0 +1,3 @@
+.signal-table { width:100%; border-collapse:collapse }
+.signal-table th, .signal-table td { padding:8px 10px; border-bottom:1px solid #eee }
+.signal-table tr:hover { background: #fbfbfb; cursor:pointer }
