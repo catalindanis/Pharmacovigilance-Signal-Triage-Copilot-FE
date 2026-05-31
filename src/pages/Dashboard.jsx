@@ -9,7 +9,7 @@ import './Dashboard.css'
 
 export default function Dashboard() {
   const [params, setParams] = useState({ drug: 'ibuprofen', start_date: '2024-01-01', end_date: '2024-03-31' })
-  const { data, loading, error, selectSignal, selected } = useSignals(params)
+  const { data, explainData, explainLoading, explainError, loading, error, selectSignal, selected } = useSignals(params)
 
   return (
     <div className="dashboard">
@@ -20,6 +20,7 @@ export default function Dashboard() {
 
       <main className="dashboard-main">
         <section className="signals">
+          {error && <div className="dashboard-error">Unable to load signals.</div>}
           <SignalTable signals={data?.signals || []} loading={loading} onSelect={selectSignal} />
         </section>
 
@@ -28,7 +29,7 @@ export default function Dashboard() {
         </aside>
       </main>
 
-      <ReportViewer signal={selected} />
+      <ReportViewer signal={selected} explainData={explainData} explainLoading={explainLoading} explainError={explainError} />
       <div style={{ position: 'fixed', right: 24, bottom: 24 }}>
         <ExportButton filename={`signal-${selected?.event?.replace(/\s+/g,'_') || 'packet'}`} />
       </div>

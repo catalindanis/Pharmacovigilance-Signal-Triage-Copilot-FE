@@ -10,6 +10,11 @@ export async function searchSignals(params) {
   return res.data
 }
 
+export async function explainSignals(body) {
+  const res = await api.post('http://localhost:8000/api/explain', body)
+  return res.data
+}
+
 export async function getSignalCases(eventName, params) {
   const res = await api.get(`/api/signals/${encodeURIComponent(eventName)}/cases`, { params })
   return res.data
